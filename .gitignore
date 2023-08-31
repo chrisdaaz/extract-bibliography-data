@@ -1,3 +1,4 @@
 example/*.html
 __pycache__
 test.py
+*.yaml

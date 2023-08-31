@@ -2,6 +2,7 @@
 
 import re
 import pypandoc
+import yaml
 
 class BibliographicCitation:
     """Generic bibiliographic citation data
@@ -116,7 +117,7 @@ bibliography_docx = "./example/bibliography.docx"
 convert(bibliography_docx, bibliography_html)
 unstructured_citations = get_raw_citations(bibliography_html)
 
-bib_data = []
+bib_data_list = []
 
 for citation in unstructured_citations:
     authors = get_authors(citation)
@@ -127,12 +128,22 @@ for citation in unstructured_citations:
         journal_title = get_journal_title(citation)
         doi = None
         article_reference = JournalArticle(authors, year, title, journal_title, doi)
-        bib_data.append(article_reference)
+        bib_data_list.append(article_reference)
     else:
         publisher_location = get_publisher(citation)[0]
         publisher = get_publisher(citation)[1]
         book_reference = Book(authors, year, title, publisher, publisher_location)
-        bib_data.append(book_reference)
+        bib_data_list.append(book_reference)
 
-for data in bib_data:
-    print(data.title)
+yaml_data = []
+
+for data in bib_data_list:
+    
+    yaml_data.append({
+        "title": data.title,
+        "authors": data.authors,
+        "year": data.year        
+    })
+
+with open("bibliography.yaml", "w") as yaml_file:
+    yaml.dump(yaml_data, yaml_file)
